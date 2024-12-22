@@ -12,7 +12,7 @@ app.use(express.json());
 dotenv.config();
 
 mongoose
-    .connect(process.env.MONGO)
+    .connect(process.env.MONGO, { autoIndex: true })
     .then(()=>{
         console.log('Mongodb Connected');
     })
