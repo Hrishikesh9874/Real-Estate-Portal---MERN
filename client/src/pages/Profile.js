@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux"
-import {deleteUserStart, deleteUserSuccess, deleteUserFailure, updateUserStart, updateUserSuccess, updateUserFailure} from '../redux/user/userSlice';
+import {signoutUserStart, signoutUserSuccess, signoutUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure, updateUserStart, updateUserSuccess, updateUserFailure} from '../redux/user/userSlice';
 import { useDispatch } from "react-redux";
 
 
@@ -107,6 +107,21 @@ export default function Profile() {
     }
   }
 
+  async function handleSignoutUser(){
+    try {
+      dispatch(signoutUserStart());
+      const res = await fetch('/api/auth/signout');
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(signoutUserFailure(data.message));
+        return;
+      }
+      dispatch(signoutUserSuccess(data));
+    } catch (error) {
+      dispatch(signoutUserFailure(error.message));
+    }
+  }
+
   useEffect(()=>{
     if(file){
       handleFileUpload(file);
@@ -135,13 +150,13 @@ export default function Profile() {
         </p>
         <input onChange={handleChange} defaultValue={currentUser.username} type="text" placeholder="username" className="border p-3 rounded-lg" id="username"/>
         <input onChange={handleChange} defaultValue={currentUser.email} type="text" placeholder="email" className="border p-3 rounded-lg" id="email"/>
-        <input onChange={handleChange} disabled={loading} type="password" placeholder="password" className="border p-3 rounded-lg" id="password"/>
-        <button type="submit" className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-95">{loading? 'LOading...' : 'Update'}</button>
+        <input onChange={handleChange} type="password" placeholder="password" className="border p-3 rounded-lg" id="password"/>
+        <button type="submit" disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-95">{loading? 'Loading...' : 'Update'}</button>
       </form>
 
       <div className="flex justify-between mt-2">
         <span onClick={handleDeleteUser} className="text-red-700 cursor-pointer">Delete account</span>
-        <span className="text-red-700 cursor-pointer">Sign out</span>
+        <span onClick={handleSignoutUser} className="text-red-700 cursor-pointer">Sign out</span>
       </div>
 
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
