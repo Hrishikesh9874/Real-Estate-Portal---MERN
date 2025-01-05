@@ -5,6 +5,7 @@ const userRouter = require('./routes/user.route');
 const authRouter = require('./routes/auth.route');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const listingRouter = require('./routes/listing.route');
 
 
 const app = express();
@@ -25,7 +26,8 @@ mongoose
 
 
 app.use('/api/user', userRouter);
-app.use('/api/auth', authRouter)
+app.use('/api/auth', authRouter);
+app.use('/api/listing', listingRouter);
 
 app.use((err, req, res, next)=> {
     const statusCode = err.statusCode || 500;
