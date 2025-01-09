@@ -56,8 +56,8 @@ export default function CreateListing() {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       data.append("file", file);
-      data.append("upload_preset", "Real-Estate");
-      data.append("cloud_name", "dbzrbmfi8");
+      data.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESET);
+      data.append("cloud_name", process.env.REACT_APP_CLOUD_NAME);
   
       const xhr = new XMLHttpRequest();
   
