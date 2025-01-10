@@ -169,7 +169,7 @@ export default function Profile() {
 
       <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
         <input onChange={(e)=> setFile(e.target.files[0])} type="file" ref={fileRef} accept="image/*" hidden/>
-        <img onClick={()=> fileRef.current.click()} src={profileImage} alt="Profile" className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2" />
+        <img onClick={()=> fileRef.current.click()} src={profileImage} alt="Profile" className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2 transition-transform duration-300 hover:scale-105" />
         <p className="text-sm self-center">
           {
             uploadError ? (
@@ -214,7 +214,9 @@ export default function Profile() {
 
             <div className="flex flex-col items-center">
               <button onClick={()=> handleListingDelete(listing._id)} className="text-red-700 upercase">Delete</button>
-              <button className="text-green-700 uppercase">Edit</button>
+              <Link to={`/update-listing/${listing._id}`}>
+                <button className="text-green-700 uppercase">Edit</button>
+              </Link>
             </div>
 
           </div>
