@@ -6,6 +6,7 @@ export default function Search() {
 
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
+    const [showMore, setShowMore] = useState(false);
 
     const [sidebardata, setSidebardata] = useState({
         searchTerm: '',
@@ -91,15 +92,34 @@ export default function Search() {
 
         async function fetchListings(){
             setLoading(true);
+            setShowMore(false);
             const searchQuery = urlParams.toString();
             const res = await fetch(`/api/listing/get?${searchQuery}`);
             const data = await res.json();
+            if(data.length > 8){
+                setShowMore(true);
+            }
+            console.log(data.length);
             setListings(data);
             setLoading(false);
         }
         fetchListings();
 
     }, [window.location.search])
+
+    async function onShowMoreClick(){
+        const numberOfListings = listings.length;
+        const startIndex = numberOfListings;
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('startIndex', startIndex);
+        const searchQuery = urlParams.toString();
+        const res = await fetch(`/api/listing/get?${searchQuery}`);
+        const data = await res.json();
+        if(data.length < 9){
+            setShowMore(false);
+        }
+        setListings([...listings, ...data]);
+    }
 
 
   return (
@@ -177,6 +197,11 @@ export default function Search() {
                     listings.map((listing)=>(
                         <ListingItem key={listing._id} listing={listing}></ListingItem>
                     ))
+                }
+                {
+                    showMore && (
+                        <button onClick={onShowMoreClick} className=' text-green-700 hover:underline p-7 mx-auto'>Show More</button>
+                    )
                 }
             </div>
         </div>
