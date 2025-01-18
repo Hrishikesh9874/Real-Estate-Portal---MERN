@@ -19,7 +19,7 @@ export default function Home() {
 
     async function fetchOfferListings(){
       try {
-        const res = await fetch('/api/listing/get?offer=true&limit=4');
+        const res = await fetch('https://realestateportal-backend.onrender.com/api/listing/get?offer=true&limit=4');
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
