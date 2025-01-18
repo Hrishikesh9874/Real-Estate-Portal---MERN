@@ -63,7 +63,7 @@ export default function Listing() {
                     <FaShare
                         className='text-slate-500'
                         onClick={()=>{
-                            navigator.clipboard.writeText(window.location.ref);
+                            navigator.clipboard.writeText(window.location.href);
                             setCopied(true);
                             setTimeout(()=>{
                                 setCopied(false);

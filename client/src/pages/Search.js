@@ -99,7 +99,6 @@ export default function Search() {
             if(data.length > 8){
                 setShowMore(true);
             }
-            console.log(data.length);
             setListings(data);
             setLoading(false);
         }
