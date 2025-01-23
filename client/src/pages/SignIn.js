@@ -21,7 +21,7 @@ export default function SignIn() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/auth/signin`, {
+      const res = await fetch(`/api/auth/signin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,6 @@ export default function SignIn() {
       }
       dispatch(signInSuccess(data));
       navigate('/')
-      console.log(data.message);
 
     } catch (error) {
       dispatch(signInFailure(error.message));

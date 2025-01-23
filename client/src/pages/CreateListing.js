@@ -122,7 +122,7 @@ export default function CreateListing() {
       if(+formData.regularPrice < +formData.discountPrice) return setError('Discounted Price must be lower than regular price');
       setLoading(true);
 
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/listing/create`, {
+      const res = await fetch(`/api/listing/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -19,29 +19,29 @@ export default function Home() {
 
     async function fetchOfferListings(){
       try {
-        const res = await fetch(`${process.env.REACT_APP_SERVER}/api/listing/get?offer=true&limit=4`);
+        const res = await fetch(`/api/listing/get?offer=true&limit=4`);
         const data = await res.json();
         setOfferListings(data);
         fetchRentListings();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
     async function fetchRentListings(){
       try {
-        const res = await fetch(`${process.env.REACT_APP_SERVER}/api/listing/get?type=rent&limit=4`);
+        const res = await fetch(`/api/listing/get?type=rent&limit=4`);
         const data = await res.json();
         setRentListings(data);
         fetchSaleListings();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
 
     async function fetchSaleListings(){
       try {
-        const res = await fetch(`${process.env.REACT_APP_SERVER}/api/listing/get?type=sell&limit=4`);
+        const res = await fetch(`/api/listing/get?type=sell&limit=4`);
         const data = await res.json();
         setSaleListings(data);
       } catch (error) {

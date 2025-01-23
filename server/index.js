@@ -6,6 +6,7 @@ const authRouter = require('./routes/auth.route');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const listingRouter = require('./routes/listing.route');
+const path = require("path");
 
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(cookieParser());
 dotenv.config();
 
+const _dirname = path.resolve();
 mongoose
     .connect(process.env.MONGO, { autoIndex: true })
     .then(()=>{
@@ -41,7 +43,10 @@ app.use((err, req, res, next)=> {
 
 const PORT = process.env.PORT || 4000;
 
-
+app.use(express.static(path.join(_dirname, "/client/build")));
+app.get('*', (_, res) => {
+    res.sendFile(path.resolve(_dirname, "client", "build", "index.html"));
+})
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on localhost: ${PORT}`);

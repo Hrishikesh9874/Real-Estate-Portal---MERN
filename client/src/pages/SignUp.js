@@ -19,7 +19,7 @@ export default function SignUp() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/auth/signup`, {
+      const res = await fetch(`/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,6 @@ export default function SignUp() {
       setLoading(false);
       setError(null);
       navigate('/sign-in')
-      console.log(data.message);
 
     } catch (error) {
       setLoading(false);

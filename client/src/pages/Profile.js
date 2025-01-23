@@ -17,6 +17,8 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [emptyData, setEmptyData] = useState(false);
+  const [openListings, setOpenListings] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -68,7 +70,7 @@ export default function Profile() {
     try {
       
       dispatch(updateUserStart());
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -94,7 +96,7 @@ export default function Profile() {
     try {
       
       dispatch(deleteUserStart());
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: 'DELETE',
       });
       const data = await res.json();
@@ -112,7 +114,7 @@ export default function Profile() {
   async function handleSignoutUser(){
     try {
       dispatch(signoutUserStart());
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/auth/signout`);
+      const res = await fetch(`/api/auth/signout`);
       const data = await res.json();
       if(data.success === false){
         dispatch(signoutUserFailure(data.message));
@@ -126,32 +128,40 @@ export default function Profile() {
 
   async function handleShowListings(){
     setShowListingsError(false);
-    try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/user/listings/${currentUser._id}`);
-      const data = await res.json();
-      if(data.success === false){
+    if(!openListings){      
+      try {
+        const res = await fetch(`/api/user/listings/${currentUser._id}`);
+        const data = await res.json();
+        if(data.success === false){
+          setShowListingsError(true);
+          return;
+        }
+        if(data.length === 0){
+          setEmptyData(true);
+          return;
+        }
+        setUserListings(data);
+        setOpenListings(true);
+      } catch (error) {
         setShowListingsError(true);
-        return;
       }
-      setUserListings(data);
-    } catch (error) {
-      setShowListingsError(true);
+    }else{
+      setOpenListings(false);
+      setUserListings([]);      
     }
   }
 
   async function handleListingDelete(listingId){
     try {
-      const res = await fetch(`${process.env.REACT_APP_SERVER}/api/listing/delete/${listingId}`, {
+      const res = await fetch(`/api/listing/delete/${listingId}`, {
         method: 'DELETE',
       })
       const data = await res.json();
       if(data.success === false){
-        console.log(data.message);
         return;
       }
       setUserListings((prev)=> prev.filter((listing)=> listing._id !== listingId));
     } catch (error) {
-      console.log(error.message);
     }
   }
 
@@ -160,6 +170,15 @@ export default function Profile() {
       handleFileUpload(file);
     }
   }, [file])
+
+  useEffect(() => {
+    if (updateSuccess) {
+      const timer = setTimeout(() => {
+        setUpdateSuccess(false);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [updateSuccess]);
 
 
   return (
@@ -195,8 +214,9 @@ export default function Profile() {
 
       <p className="text-red-700 mt-5">{error ? error : ''}</p>
       <p className="text-green-700 mt-5">{updateSuccess ? 'User is Updated Successfully..' : ''}</p>
-      <button onClick={handleShowListings} className="text-green-700 w-full">Show Listings</button>
+      <button onClick={handleShowListings} className="text-green-700 w-full">{openListings ? 'Hide Listings' : 'Show Listings'}</button>
       <p className="text-red-700 mt-5">{showListingsError ? 'Error showing listings' : ''}</p>
+      <p className="text-red-700 mt-5">{emptyData ? 'Please create some listings to show' : ''}</p>
 
       {
         userListings && userListings.length > 0 &&
